@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>My Tiny SPA</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 24px; }
+    nav { display: flex; gap: 12px; margin-bottom: 24px; }
+    nav a { text-decoration: none; padding: 4px 8px; border-radius: 8px; }
+    nav a.active { background: #eee; }
+    main { min-height: 40vh; }
+    .muted { color: #6b7280; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/path1">Path1</a>
+    <a href="/path2">Path2</a>
+  </nav>
+
+  <main id="app" aria-live="polite"></main>
+
+  <!-- Page templates -->
+  <template id="tpl-/">
+    <h1>Home</h1>
+    <p class="muted">This is the homepage. Use the nav to hit /path1 and /path2.</p>
+  </template>
+
+  <template id="tpl-/path1">
+    <h1>Path 1</h1>
+    <p>Content for <strong>/path1</strong>. Put anything you want here.</p>
+  </template>
+
+  <template id="tpl-/path2">
+    <h1>Path 2</h1>
+    <p>Content for <strong>/path2</strong>. Also anything you want.</p>
+  </template>
+
+  <template id="tpl-404">
+    <h1>Not found</h1>
+    <p class="muted">We couldn’t find that page. Try Home, Path1, or Path2.</p>
+  </template>
+
+  <script>
+    const routes = new Set(["/", "/path1", "/path2"]);
+    const app = document.getElementById("app");
+
+    function normalize(path) {
+      // remove trailing slashes (except root)
+      const p = path.replace(/\/+$/,"") || "/";
+      return routes.has(p) ? p : "__404__";
+    }
+
+    function render(pathname) {
+      const key = normalize(pathname);
+      const tplId = key === "__404__" ? "tpl-404" : `tpl-${key}`;
+      const tpl = document.getElementById(tplId);
+      app.innerHTML = "";
+      app.appendChild(tpl.content.cloneNode(true));
+
+      // Title + active nav
+      const titleMap = { "/": "Home", "/path1": "Path1", "/path2": "Path2" };
+      document.title = (key === "__404__" ? "404" : titleMap[key]) + " · My Tiny SPA";
+      document.querySelectorAll("nav a").forEach(a => {
+        a.classList.toggle("active", a.getAttribute("href") === (key === "__404__" ? "" : key));
+      });
+
+      window.scrollTo(0, 0);
+    }
+
+    function navigate(to) {
+      const key = normalize(to);
+      const url = key === "__404__" ? to : to;
+      history.pushState({}, "", url);
+      render(location.pathname);
+    }
+
+    // Intercept internal link clicks
+    document.addEventListener("click", (e) => {
+      const a = e.target.closest("a[href]");
+      if (!a) return;
+
+      const url = new URL(a.href, location.origin);
+      const modified = e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.target === "_blank";
+      const internal = url.origin === location.origin && routes.has(url.pathname);
+
+      if (internal && !modified) {
+        e.preventDefault();
+        navigate(url.pathname);
+      }
+    });
+
+    // Back/forward buttons
+    window.addEventListener("popstate", () => render(location.pathname));
+
+    // Initial render
+    render(location.pathname);
+  </script>
+</body>
+</html>
