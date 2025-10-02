@@ -166,4 +166,158 @@
           <li><a href="/path2">Path2</a></li>
         </ul>
       </nav>
-    <
+    </div>
+  </header>
+
+  <main id="app" class="container" aria-live="polite"></main>
+
+  <!-- Page templates -->
+  <template id="tpl-/">
+    <section>
+      <h1>Home</h1>
+      <p class="muted">Welcome Home.</p>
+
+      <div class="ascii-wrap">
+        <pre class="ascii" aria-label="ASCII palm tree" role="img">⠀
+⢀⣀⡤⠤⠤⢤⣀⡀⠀⠀⣤⣄⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠉⠓⢦⣄⡀⠀⠉⠙⠲⢼⣧⡉⠙⠲⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠈⠙⠳⣤⡀⠀⢀⠈⠙⠲⣄⣄⠙⢦⣴⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠳⣌⡓⢤⡀⠈⠉⢣⠀⠻⠈⢷⠀⠀⢀⣀⣠⣤⣤⣤⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⣠⣤⡤⠦⠤⠤⠤⠤⠤⠤⢤⣼⡿⣆⠙⢦⠀⠀⢧⠹⡄⠈⡷⠛⢉⣀⣀⡀⠀⠐⠻⠶⠤⢤⣄⡀⠀⠀⠀⠀⠀⠀⠀
+⠉⠙⠛⠛⠓⠲⠶⠦⢤⣄⡀⠈⢡⡈⠑⢦⡱⡄⠈⣇⠁⢀⠇⠀⣉⡤⠔⢛⣧⡤⠤⠤⠤⠤⠤⠿⢷⣦⣶⣦⣤⣤⠄
+⠀⠀⠀⠀⠀⠀⠀⠀⢀⣾⣯⣤⣀⡉⠒⠀⣹⠶⠤⣼⣄⣾⠔⠋⠁⣀⡤⠞⢁⣀⣠⠤⠶⠶⠿⣭⣉⠙⢧⡀⠀⠀⠀
+⠀⠀⠀⠀⣤⣶⡟⠋⠉⣉⣉⣉⠛⠛⠷⣶⡃⢀⡤⠘⡿⠓⢶⣬⠥⠔⠒⠒⠚⠛⠶⢶⣦⠀⠀⠀⠈⠉⠛⠿⠀⠀⠀
+⠀⠀⠀⢠⡼⠋⠁⣠⣼⣧⣠⣤⠴⠶⠶⠾⢷⣆⣀⣴⠃⢷⣀⡧⢤⣗⡒⠶⠤⠀⠀⠻⢦⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⡴⠋⢀⡴⠋⠀⠉⠉⠀⠀⠀⠀⠀⢀⡞⠁⠀⢉⡿⠛⣿⢀⢦⡀⠉⢳⣶⠶⠶⢤⣄⡈⠙⠶⣄⠀⠀⠀⠀⠀⠀
+⠀⣼⠁⡴⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⡎⠀⠀⠀⡼⠀⠀⠛⠻⣆⠳⡀⠘⣏⠁⠀⠀⠀⠉⠙⠓⠮⢿⣦⡀⠀⠀⠀
+⠀⣇⡞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡾⠉⠙⠒⢲⡇⠀⠀⠀⠀⠸⡄⢱⠀⢹⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠸⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠇⢤⠀⠀⢸⠁⠀⠀⠀⠀⠀⢻⠀⠃⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢼⡀⠀⠘⠀⢸⠀⠀⠀⠀⠀⠀⢸⡆⢀⡾⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⠉⠉⠉⠉⠙⡇⠀⠀⠀⠀⠀⣸⣧⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠤⠀⠀⠀⠀⢷⠀⠀⠀⠀⠀⠿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢿⠀⠉⠀⠀⠀⠘⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡀⠀⠀⣀⣀⣠⠼⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⠋⠉⠁⠀⢀⡀⠻⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠹⡄⠀⠀⠀⠈⠉⠀⠘⢦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⣀⣀⢹⡀⣰⠛⢧⣠⢄⣀⣬⢧⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⣿⠻⡌⠻⠿⠃⠀⠈⠁⠈⠁⠸⠋⢹⡷⣶⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⛛⠲⠶⠒⠒⠚⠛⠛⠛⠛⠓⠓⠛⠛⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⢀⠀⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⡀⠀⢀⠀⢀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠘⠚⠛⠚⠛⠻⠟⠛⠃⠟⠻⠓⠐⠚⠛⠛⠀⠀⠀⠀⠀⠃⠟⠓⠺⠛⠻⠗⠃⠀⠀⠀⠀⠀⠀⠀⠀
+</pre>
+      </div>
+
+      <div class="divider" aria-hidden="true"></div>
+
+      <!-- NEW: big scroll pad section -->
+      <section class="scroll-pad">
+        <p class="muted">Scroll test area — keep going ↓</p>
+        <p>Filler content to generate meaningful scroll for session recording/heatmaps. You can add more paragraphs here if you want richer text nodes for your tool to sample.</p>
+        <p>Another paragraph. Feel free to duplicate this section to create even more depth.</p>
+      </section>
+    </section>
+  </template>
+
+  <template id="tpl-/path1">
+    <section>
+      <h1>DOLDRUM CORP, INC.</h1>
+      <img src="./df101a_3a8b9cbb01834f37919a7b0e37cbd43f~mv2.avif" alt="DOLDRUM CORP, INC.">
+      <div class="scroll-pad">
+        <p class="muted">Extra scroll space for this route too.</p>
+      </div>
+    </section>
+  </template>
+
+  <template id="tpl-/path2">
+    <section>
+      <h1>ETERNITY ONLINE</h1>
+      <img src="df101a_5999e2f16b7743f5a974c0025b1f5251~mv2.avif" alt="ETERNITY ONLINE">
+      <div class="scroll-pad">
+        <p class="muted">Extra scroll space for this route too.</p>
+      </div>
+    </section>
+  </template>
+
+  <template id="tpl-404">
+    <section>
+      <h1>NOT FOUND</h1>
+      <img src="df101a_af52aec90307446b819201f13646ce3d~mv2.avif" alt="NOT FOUND">
+      <div class="scroll-pad">
+        <p class="muted">Extra scroll space for this route too.</p>
+      </div>
+    </section>
+  </template>
+
+  <!-- NEW: footer with a big dolphin emoji -->
+  <footer role="contentinfo" class="container" id="bottom">
+    🐬
+  </footer>
+
+  <script>
+    /* SPA router + active nav + mobile toggle */
+    const routes = new Set(["/", "/path1", "/path2"]);
+    const app = document.getElementById("app");
+    const nav = document.getElementById("site-nav");
+    const toggleBtn = document.querySelector(".nav-toggle");
+
+    function normalize(path) {
+      const p = path.replace(/\/+$/,"") || "/";
+      return routes.has(p) ? p : "__404__";
+    }
+
+    function setActiveLink(key){
+      document.querySelectorAll("nav a").forEach(a => {
+        const href = a.getAttribute("href");
+        a.classList.toggle("active", href === (key === "__404__" ? "" : key));
+      });
+    }
+
+    function render(pathname) {
+      const key = normalize(pathname);
+      const tplId = key === "__404__" ? "tpl-404" : `tpl-${key}`;
+      const tpl = document.getElementById(tplId);
+      app.innerHTML = "";
+      app.appendChild(tpl.content.cloneNode(true));
+
+      const titleMap = { "/": "Home", "/path1": "Path1", "/path2": "Path2" };
+      document.title = (key === "__404__" ? "404" : titleMap[key]) + " · My Tiny SPA";
+      setActiveLink(key);
+
+      // close mobile menu on navigation
+      nav.dataset.collapsed = "true";
+      toggleBtn.setAttribute("aria-expanded", "false");
+
+      // scroll to top for each route load
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    }
+
+    function navigate(to) {
+      const key = normalize(to);
+      history.pushState({}, "", key === "__404__" ? to : to);
+      render(location.pathname);
+    }
+
+    document.addEventListener("click", (e) => {
+      const a = e.target.closest("a[href]");
+      if (!a) return;
+      const url = new URL(a.href, location.origin);
+      const modified = e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.target === "_blank";
+      const internal = url.origin === location.origin && routes.has(url.pathname);
+      if (internal && !modified) {
+        e.preventDefault();
+        navigate(url.pathname);
+      }
+    });
+
+    window.addEventListener("popstate", () => render(location.pathname));
+
+    toggleBtn.addEventListener("click", () => {
+      const isCollapsed = nav.dataset.collapsed !== "false";
+      nav.dataset.collapsed = String(!isCollapsed);
+      toggleBtn.setAttribute("aria-expanded", String(isCollapsed));
+    });
+
+    render(location.pathname);
+  </script>
+</body>
+</html>
