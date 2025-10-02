@@ -1,65 +1,228 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-FVTTJG3R');</script>
-<!-- End Google Tag Manager -->
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-FVTTJG3R');</script>
+  <!-- End Google Tag Manager -->
+
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>My Tiny SPA</title>
+
   <style>
-    body { font-family: system-ui, sans-serif; margin: 24px; }
-    nav { display: flex; gap: 12px; margin-bottom: 24px; }
-    nav a { text-decoration: none; padding: 4px 8px; border-radius: 8px; }
-    nav a.active { background: #eee; }
-    main { min-height: 40vh; }
-    .muted { color: #6b7280; }
-     .ascii {
-    white-space: pre;
-    font-family:
-      "Noto Sans Symbols 2",
-      "Noto Sans Symbols",
-      "Apple Braille",
-      "Segoe UI Symbol",
-      "Menlo", "Consolas", "Courier New", monospace;
-    line-height: 1;     
-    font-size: 14px;    
-    letter-spacing: 0;  
-    display: block;     
-    overflow: auto;     
-    max-width: 100%;
-  }
-  .ascii-wrap {
-    display: grid;
-    place-items: center;
-    min-height: 100vh;  /* vertically center on the page */
-    margin: 0;
-  }
+    /* ----- Design tokens ----- */
+    :root{
+      --bg: #ffffff;
+      --fg: #0f172a;        /* slate-900-ish */
+      --muted: #6b7280;     /* slate-500 */
+      --surface: #f3f4f6;   /* slate-100 */
+      --ring: #3b82f6;      /* blue-500 */
+
+      /* fluid scales */
+      --space: clamp(12px, 1.2vw, 24px);
+      --space-sm: calc(var(--space) * 0.75);
+      --space-lg: calc(var(--space) * 1.5);
+      --radius: 10px;
+
+      --fs-sm: clamp(12px, 1.1vw, 14px);
+      --fs-base: clamp(14px, 1.2vw, 16px);
+      --fs-lg: clamp(18px, 2.2vw, 28px);
+    }
+
+    @media (prefers-color-scheme: dark){
+      :root{
+        --bg: #0b0f1a;
+        --fg: #e5e7eb;
+        --muted: #9ca3af;
+        --surface: #111827;
+        --ring: #60a5fa;
+      }
+    }
+
+    /* ----- Base ----- */
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      padding: calc(env(safe-area-inset-top) + var(--space))
+               calc(env(safe-area-inset-right) + var(--space))
+               calc(env(safe-area-inset-bottom) + var(--space))
+               calc(env(safe-area-inset-left) + var(--space));
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+      font-size: var(--fs-base);
+      color: var(--fg);
+      background: var(--bg);
+      line-height: 1.45;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+
+    /* ----- Layout container ----- */
+    .container{
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    /* ----- Header / Nav ----- */
+    header{
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: color-mix(in oklab, var(--bg) 85%, transparent);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid color-mix(in oklab, var(--muted) 20%, transparent);
+    }
+
+    .bar{
+      display: grid;
+      grid-template-columns: auto max-content;
+      align-items: center;
+      gap: var(--space);
+      padding: var(--space) 0;
+    }
+
+    .brand{
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    /* nav list */
+    nav ul{
+      list-style: none;
+      display: flex;
+      gap: var(--space-sm);
+      margin: 0;
+      padding: 0;
+    }
+    nav a{
+      text-decoration: none;
+      padding: 6px 10px;
+      border-radius: var(--radius);
+      color: var(--fg);
+    }
+    nav a:hover{
+      background: var(--surface);
+    }
+    nav a.active{
+      background: var(--surface);
+    }
+
+    /* mobile menu toggle */
+    .nav-toggle{
+      display: none;
+      border: 1px solid color-mix(in oklab, var(--muted) 30%, transparent);
+      background: transparent;
+      color: inherit;
+      border-radius: var(--radius);
+      padding: 6px 10px;
+      font: inherit;
+    }
+
+    /* Stack nav on narrow screens */
+    @media (max-width: 640px){
+      .bar{
+        grid-template-columns: 1fr auto;
+        align-items: start;
+      }
+      .nav-toggle{ display: inline-block; }
+      nav[data-collapsed="true"] ul{ display: none; }
+      nav ul{
+        flex-direction: column;
+        gap: 6px;
+        padding-top: var(--space-sm);
+      }
+    }
+
+    /* ----- Main ----- */
+    main{
+      min-height: 40vh;
+      padding: var(--space) 0;
+    }
+
+    h1{
+      font-size: var(--fs-lg);
+      line-height: 1.1;
+      margin: 0 0 var(--space-sm);
+    }
+    .muted{ color: var(--muted); }
+
+    /* ----- ASCII styles ----- */
+    .ascii{
+      white-space: pre;
+      font-family:
+        "Noto Sans Symbols 2",
+        "Noto Sans Symbols",
+        "Apple Braille",
+        "Segoe UI Symbol",
+        Menlo, Consolas, "Courier New", monospace;
+      line-height: 1;
+      font-size: clamp(10px, 1.6vw, 16px); /* scale a bit with viewport */
+      letter-spacing: 0;
+      display: block;
+      overflow: auto;      /* scroll instead of wrapping */
+      max-width: 100%;
+      border-radius: var(--radius);
+      padding: var(--space-sm);
+      background: color-mix(in oklab, var(--surface) 60%, transparent);
+    }
+
+    /* center helper if you want full-screen art sections */
+    .ascii-wrap{
+      display: grid;
+      place-items: center;
+      min-height: 60svh; /* small-viewport friendly */
+      margin: 0;
+    }
+
+    /* ----- Focus & motion ----- */
+    :where(a, button):focus-visible{
+      outline: 3px solid var(--ring);
+      outline-offset: 2px;
+      border-radius: calc(var(--radius) + 2px);
+    }
+    @media (prefers-reduced-motion: reduce){
+      * { animation: none !important; transition: none !important; }
+      header { backdrop-filter: none; }
+    }
   </style>
 </head>
 <body>
-    <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-FVTTJG3R"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
-  <nav>
-    <a href="/">Home</a>
-    <a href="/path1">Path1</a>
-    <a href="/path2">Path2</a>
-  </nav>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-FVTTJG3R"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
 
-  <main id="app" aria-live="polite"></main>
+  <header>
+    <div class="container bar">
+      <div class="brand">My Tiny SPA</div>
+
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        Menu
+      </button>
+
+      <nav id="site-nav" data-collapsed="true" aria-label="Primary">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/path1">Path1</a></li>
+          <li><a href="/path2">Path2</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="app" class="container" aria-live="polite"></main>
 
   <!-- Page templates -->
   <template id="tpl-/">
-    <h1>Home</h1>
-    <p class="muted">Welcome Home.</p>
-    <p class="ascii">⠀
-        ⢀⣀⡤⠤⠤⢤⣀⡀⠀⠀⣤⣄⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+    <section>
+      <h1>Home</h1>
+      <p class="muted">Welcome Home.</p>
+      <div class="ascii-wrap">
+        <pre class="ascii" aria-label="ASCII palm tree" role="img">⠀
+⢀⣀⡤⠤⠤⢤⣀⡀⠀⠀⣤⣄⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠉⠓⢦⣄⡀⠀⠉⠙⠲⢼⣧⡉⠙⠲⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠈⠙⠳⣤⡀⠀⢀⠈⠙⠲⣄⣄⠙⢦⣴⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠳⣌⡓⢤⡀⠈⠉⢣⠀⠻⠈⢷⠀⠀⢀⣀⣠⣤⣤⣤⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -84,32 +247,49 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠲⠶⠒⠒⠚⠛⠛⠛⠛⠓⠓⠛⠛⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⢀⠀⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⡀⠀⢀⠀⢀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠘⠚⠛⠚⠛⠻⠟⠛⠃⠟⠻⠓⠐⠚⠛⠛⠀⠀⠀⠀⠀⠃⠟⠓⠺⠛⠻⠗⠃⠀⠀⠀⠀⠀⠀⠀⠀
-</p>
+</pre>
+      </div>
+    </section>
   </template>
 
   <template id="tpl-/path1">
-    <h1>DOLDRUM CORP, INC.</h1>
-    <img src="./df101a_3a8b9cbb01834f37919a7b0e37cbd43f~mv2.avif" alt="DOLDRUM CORP, INC.">
+    <section>
+      <h1>DOLDRUM CORP, INC.</h1>
+      <img src="./df101a_3a8b9cbb01834f37919a7b0e37cbd43f~mv2.avif" alt="DOLDRUM CORP, INC.">
+    </section>
   </template>
 
   <template id="tpl-/path2">
-    <h1>ETERNITY ONLINE</h1>
-    <img src="df101a_5999e2f16b7743f5a974c0025b1f5251~mv2.avif" alt="ETERNITY ONLINE">
+    <section>
+      <h1>ETERNITY ONLINE</h1>
+      <img src="df101a_5999e2f16b7743f5a974c0025b1f5251~mv2.avif" alt="ETERNITY ONLINE">
+    </section>
   </template>
 
   <template id="tpl-404">
-    <h1>NOT FOUND</h1>
-    <img src="df101a_af52aec90307446b819201f13646ce3d~mv2.avif" alt="NOT FOUND">
+    <section>
+      <h1>NOT FOUND</h1>
+      <img src="df101a_af52aec90307446b819201f13646ce3d~mv2.avif" alt="NOT FOUND">
+    </section>
   </template>
 
   <script>
+    /* ---- SPA Router (unchanged behavior, plus active state + mobile nav) ---- */
     const routes = new Set(["/", "/path1", "/path2"]);
     const app = document.getElementById("app");
+    const nav = document.getElementById("site-nav");
+    const toggleBtn = document.querySelector(".nav-toggle");
 
     function normalize(path) {
-      // remove trailing slashes (except root)
       const p = path.replace(/\/+$/,"") || "/";
       return routes.has(p) ? p : "__404__";
+    }
+
+    function setActiveLink(key){
+      document.querySelectorAll("nav a").forEach(a => {
+        const href = a.getAttribute("href");
+        a.classList.toggle("active", href === (key === "__404__" ? "" : key));
+      });
     }
 
     function render(pathname) {
@@ -119,20 +299,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       app.innerHTML = "";
       app.appendChild(tpl.content.cloneNode(true));
 
-      // Title + active nav
       const titleMap = { "/": "Home", "/path1": "Path1", "/path2": "Path2" };
       document.title = (key === "__404__" ? "404" : titleMap[key]) + " · My Tiny SPA";
-      document.querySelectorAll("nav a").forEach(a => {
-        a.classList.toggle("active", a.getAttribute("href") === (key === "__404__" ? "" : key));
-      });
+      setActiveLink(key);
 
-      window.scrollTo(0, 0);
+      // close mobile menu on navigation
+      nav.dataset.collapsed = "true";
+      toggleBtn.setAttribute("aria-expanded", "false");
+
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" in window ? "instant" : "auto" });
     }
 
     function navigate(to) {
       const key = normalize(to);
-      const url = key === "__404__" ? to : to;
-      history.pushState({}, "", url);
+      history.pushState({}, "", key === "__404__" ? to : to);
       render(location.pathname);
     }
 
@@ -153,6 +333,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     // Back/forward buttons
     window.addEventListener("popstate", () => render(location.pathname));
+
+    // Mobile nav toggle
+    toggleBtn.addEventListener("click", () => {
+      const isCollapsed = nav.dataset.collapsed !== "false";
+      nav.dataset.collapsed = String(!isCollapsed);
+      toggleBtn.setAttribute("aria-expanded", String(isCollapsed));
+    });
 
     // Initial render
     render(location.pathname);
