@@ -8,6 +8,143 @@
   'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
   })(window,document,'script','dataLayer','GTM-FVTTJG3R');</script>
   <!-- End Google Tag Manager -->
+  <script>
+(function () {
+  // Configuration
+  const UTM_KEYS = [
+    "utm_ecid",
+    "utm_region",
+    "utm_institute",
+    "utm_placement",
+    "utm_agency",
+    "utm_partnerid"
+  ];
+
+  const STORAGE_KEY = "fp_custom_utm_params";
+  const ATTRIBUTION_WINDOW_MS = 30 * 60 * 1000; // 30 minutes
+  const USE_SLIDING_WINDOW = true; // Refresh timestamp each time UTMs are used
+
+  // Check if localStorage is available
+  function getSafeLocalStorage() {
+    try {
+      const testKey = "__fp_test__";
+      localStorage.setItem(testKey, "1");
+      localStorage.removeItem(testKey);
+      return localStorage;
+    } catch {
+      return null;
+    }
+  }
+
+  const safeStorage = getSafeLocalStorage();
+
+  // Read stored UTM params
+  function readStoredParams() {
+    if (!safeStorage) return null;
+    try {
+      const raw = safeStorage.getItem(STORAGE_KEY);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      return parsed && typeof parsed === "object" ? parsed : null;
+    } catch {
+      return null;
+    }
+  }
+
+  // Save params with a new timestamp
+  function saveStoredParams(params) {
+    if (!safeStorage) return;
+    try {
+      safeStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({ params, timestamp: Date.now() })
+      );
+    } catch {
+      // ignore errors (e.g., quota exceeded)
+    }
+  }
+
+  // Remove stored params
+  function clearStoredParams() {
+    if (!safeStorage) return;
+    try {
+      safeStorage.removeItem(STORAGE_KEY);
+    } catch {}
+  }
+
+  // Check if the stored timestamp is still valid
+  function isFresh(timestamp) {
+    return typeof timestamp === "number" && Date.now() - timestamp < ATTRIBUTION_WINDOW_MS;
+  }
+
+  // Collect UTMs from URL
+  function getUrlUtms() {
+    const result = {};
+    const qs = new URLSearchParams(window.location.search);
+    UTM_KEYS.forEach((key) => {
+      const value = qs.get(key);
+      if (value) result[key] = value;
+    });
+    return result;
+  }
+
+  // Main function to apply UTM params
+  function setCustomUtmProperties() {
+    if (typeof freshpaint === "undefined") {
+      console.warn("Freshpaint not found. UTM properties not set.");
+      return;
+    }
+
+    const urlParams = getUrlUtms();
+    const hasUrlParams = Object.keys(urlParams).length > 0;
+
+    // Use URL UTMs if present
+    if (hasUrlParams) {
+      saveStoredParams(urlParams);
+      freshpaint.addEventProperties(urlParams);
+      console.log("Applied URL UTMs:", urlParams);
+      return urlParams;
+    }
+
+    // Otherwise, reuse stored UTMs if still fresh
+    const stored = readStoredParams();
+    const storedParams = stored?.params;
+    const storedTs = stored?.timestamp;
+
+    if (storedParams && isFresh(storedTs)) {
+      if (USE_SLIDING_WINDOW) saveStoredParams(storedParams);
+      freshpaint.addEventProperties(storedParams);
+      console.log("Reused stored UTMs:", storedParams);
+      return storedParams;
+    }
+
+    // Clear expired or invalid UTMs
+    clearStoredParams();
+    console.log("No fresh UTMs found or stored data expired.");
+    return null;
+  }
+
+  // Wait for Freshpaint to be ready
+  function runWhenFreshpaintReady() {
+    const hasReady = typeof freshpaint !== "undefined" && typeof freshpaint.ready === "function";
+    if (hasReady) {
+      freshpaint.ready(setCustomUtmProperties);
+    } else {
+      setTimeout(setCustomUtmProperties, 100);
+    }
+  }
+
+  runWhenFreshpaintReady();
+
+  // Expose helper methods for debugging
+  window.setCustomUtmProperties = setCustomUtmProperties;
+  window.getStoredCustomUtmProperties = () => readStoredParams();
+  window.clearStoredCustomUtmProperties = () => {
+    clearStoredParams();
+    console.log("Cleared stored UTM parameters.");
+  };
+})();
+</script>
 
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
